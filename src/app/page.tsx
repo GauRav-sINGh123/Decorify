@@ -2,6 +2,7 @@ import { InteractiveRoom } from "@/components/InteractiveRoom";
 import Features from "../components/Features";
 import Hero from "../components/Hero";
 import { ProjectShowcase } from "@/components/ProjectShowcase";
+import Service from "@/components/Service";
 
  
 export default function Home() {
@@ -21,7 +22,7 @@ export default function Home() {
           <ProjectShowcase/>
         </div>
       </section>
-
+      <Service/>
     </div>
   );
 }
