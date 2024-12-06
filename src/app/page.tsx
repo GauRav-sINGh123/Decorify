@@ -3,13 +3,17 @@ import Features from "../components/Features";
 import Hero from "../components/Hero";
 import { ProjectShowcase } from "@/components/ProjectShowcase";
 import Service from "@/components/Service";
+import { TestimonialSlider } from "@/components/TestimonialSilder";
+import Footer from "@/components/Footer";
 
  
 export default function Home() {
   return (
     <div className="relative">
      <Hero/>
+
      <Features/>
+
      <section className="py-24">
         <div className="container px-4 mx-auto">
           <div className="text-center max-w-2xl mx-auto mb-16">
@@ -22,7 +26,12 @@ export default function Home() {
           <ProjectShowcase/>
         </div>
       </section>
+
       <Service/>
+
+      <TestimonialSlider/>
+
+      <Footer/>
     </div>
   );
 }
