@@ -17,9 +17,9 @@ export function FeatureCard({ icon, title, description, gradient }: FeatureCardP
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      className="group relative p-8 rounded-xl border bg-card/50 backdrop-blur-sm"
+      className="group relative p-8 rounded-xl border bg-card/50 backdrop-blur-sm cursor-pointer"
     >
-      <div className={`absolute inset-0 opacity-0 group-hover:opacity-10 bg-gradient-to-br ${gradient} rounded-xl transition-opacity`} />
+      <div className={`absolute inset-0 opacity-0 group-hover:opacity-10 bg-gradient-to-br ${gradient} rounded-xl transition-opacity `} />
       
       <div className="relative">
         <div className="mb-4 p-3 rounded-lg inline-block bg-background">
