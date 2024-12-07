@@ -1,11 +1,13 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
- 
+import { motion } from "framer-motion";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { useAuth, UserButton } from "@clerk/nextjs";
 
 export function Navbar() {
+  const { isSignedIn } = useAuth();
+
   return (
     <motion.header
       initial={{ y: -20, opacity: 0 }}
@@ -17,18 +19,28 @@ export function Navbar() {
         <Link href="/" className="text-xl font-light tracking-wide">
           MAISON
         </Link>
-        
+
         <div className="flex items-center space-x-8">
           <Link href="/about" className="hover:text-primary transition-colors">
             About
           </Link>
-          <Button variant="outline" className="ml-4">
-            Sign In
-          </Button>
+          {isSignedIn ? (
+            <UserButton
+              appearance={{
+                elements: {
+                  avatarBox: "w-8 h-8",
+                },
+              }}
+            />
+          ) : (
+            <Link href="/signin">
+              <Button variant="outline" className="ml-4">
+                Sign In
+              </Button>
+            </Link>
+          )}
         </div>
-
-         
       </nav>
     </motion.header>
-  )
+  );
 }

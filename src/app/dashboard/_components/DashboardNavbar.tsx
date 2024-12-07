@@ -1,7 +1,7 @@
 "use client";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { UserButton } from "@clerk/nextjs";
 
 function DashboardNavbar() {
   return (
@@ -23,9 +23,7 @@ function DashboardNavbar() {
           <Link href="/about" className="hover:text-primary transition-colors">
             About
           </Link>
-          <Button variant="outline" className="ml-4">
-            Sign In
-          </Button>
+          <UserButton/>
         </div>
       </nav>
     </motion.header>
