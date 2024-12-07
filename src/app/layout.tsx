@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Playfair_Display, Inter } from "next/font/google";
 import { ClerkProvider} from '@clerk/nextjs'
+import {Suspense} from "react"
  
 
 const playfair = Playfair_Display({ subsets: ["latin"] });
@@ -21,12 +22,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return ( 
-     <ClerkProvider>  
+    <Suspense fallback={<div>Loading...</div>}>
+     <ClerkProvider dynamic>  
     <html lang="en">
       <body className={`${inter.variable} ${playfair.className}`}>
         {children}
       </body>
     </html>
     </ClerkProvider>
+    </Suspense>
   );
 }
