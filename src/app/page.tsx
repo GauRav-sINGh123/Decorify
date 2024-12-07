@@ -5,7 +5,6 @@ import { ProjectShowcase } from "@/components/ProjectShowcase";
 import Service from "@/components/Service";
 import { TestimonialSlider } from "@/components/TestimonialSilder";
 import Footer from "@/components/Footer";
-import StatsSection from "@/components/StatsSection";
 import ProcessTimeline from "@/components/ProcessTimeline";
 import { Navbar } from "@/components/Navbar";
 
@@ -14,7 +13,6 @@ export default function Home() {
     <div className="relative">
       <Navbar />
       <Hero />
-      <StatsSection />
       <Features />
 
       <section className="py-24">
