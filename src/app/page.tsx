@@ -5,13 +5,15 @@ import { ProjectShowcase } from "@/components/ProjectShowcase";
 import Service from "@/components/Service";
 import { TestimonialSlider } from "@/components/TestimonialSilder";
 import Footer from "@/components/Footer";
+import StatsSection from "@/components/StatsSection";
+import ProcessTimeline from "@/components/ProcessTimeline";
 
  
 export default function Home() {
   return (
     <div className="relative">
      <Hero/>
-
+    <StatsSection/>
      <Features/>
 
      <section className="py-24">
@@ -23,6 +25,7 @@ export default function Home() {
             </p>
           </div>
           <InteractiveRoom />
+          <ProcessTimeline/>
           <ProjectShowcase/>
         </div>
       </section>
