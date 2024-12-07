@@ -1,11 +1,9 @@
-"use client"
+"use client";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { motion } from "framer-motion";
 
-import { motion } from "framer-motion"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
- 
-
-export function Navbar() {
+function DashboardNavbar() {
   return (
     <motion.header
       initial={{ y: -20, opacity: 0 }}
@@ -17,8 +15,11 @@ export function Navbar() {
         <Link href="/" className="text-xl font-light tracking-wide">
           MAISON
         </Link>
-        
+
         <div className="flex items-center space-x-8">
+          <Link href="/" className="hover:text-primary transition-colors">
+            Home
+          </Link>
           <Link href="/about" className="hover:text-primary transition-colors">
             About
           </Link>
@@ -26,9 +27,9 @@ export function Navbar() {
             Sign In
           </Button>
         </div>
-
-         
       </nav>
     </motion.header>
-  )
+  );
 }
+
+export default DashboardNavbar;

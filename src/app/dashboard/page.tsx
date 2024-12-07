@@ -105,9 +105,8 @@ export default function Dashboard() {
                   </div>
 
                   <Button
-                    variant="destructive"
                     size="sm"
-                    className="w-full"
+                    className="w-full text-sm bg-orange-200 text-black hover:bg-orange-200"
                     
                   >
                     Delete
