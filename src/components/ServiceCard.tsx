@@ -1,5 +1,5 @@
 "use client"
-
+import Image from "next/image"
 import { motion } from "framer-motion"
 
 interface ServiceCardProps {
@@ -17,10 +17,11 @@ export function ServiceCard({ title, description, image }: ServiceCardProps) {
       className="group cursor-pointer"
     >
       <div className="relative aspect-[3/2] mb-6 overflow-hidden rounded-lg">
-        <img
+        <Image
           src={image}
           alt={title}
-          className="object-cover w-full h-full transform group-hover:scale-105 transition-transform duration-500"
+          fill
+          className="object-cover  transform group-hover:scale-105 transition-transform duration-500"
         />
         <div className="absolute inset-0 bg-primary/10 group-hover:bg-primary/20 transition-colors" />
       </div>

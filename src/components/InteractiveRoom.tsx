@@ -1,5 +1,5 @@
 "use client"
-
+import Image from "next/image"
 import { motion } from "framer-motion"
 import { useState } from "react"
 import { cn } from "@/lib/utils"
@@ -21,11 +21,12 @@ export function InteractiveRoom() {
       viewport={{ once: true }}
       className="relative aspect-video rounded-xl overflow-hidden border shadow-2xl"
     >
-      <img
-        src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80"
-        alt="Modern living room"
-        className="w-full h-full object-cover"
-      />
+      <Image
+              src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80"
+              alt="Modern living room"
+              fill
+              className="object-cover"
+            />
       
       {hotspots.map((spot, index) => (
         <div

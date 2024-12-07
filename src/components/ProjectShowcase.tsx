@@ -1,5 +1,5 @@
 "use client"
-
+import Image from "next/image"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
@@ -50,10 +50,11 @@ export function ProjectShowcase() {
               className="group cursor-pointer"
             >
               <div className="relative aspect-[4/5] mb-4">
-                <img
+                <Image
                   src={project.image}
                   alt={project.title}
-                  className="rounded-lg object-cover w-full h-full"
+                  fill
+                  className="rounded-lg object-cover "
                 />
                 <div className="absolute inset-0 bg-primary/10 group-hover:bg-primary/20 transition-colors rounded-lg" />
               </div>

@@ -1,8 +1,9 @@
 import Link from "next/link";
+import Image from "next/image";
 
 function Hero() {
   return (
-    <section className="min-h-screen relative flex items-center pt-10">
+    <section className="min-h-screen relative flex items-center pt-10 mt-12 md:mt-0">
       <div className="absolute inset-0 opacity-10 pattern-grid pointer-events-none" />
       <div className="container px-4 mx-auto">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -24,10 +25,12 @@ function Hero() {
           </div>
 
           <div className="relative aspect-square animate-fade-in-delayed mt-10">
-            <img
-              src="https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80"
-              alt="Luxury Interior"
-              className="rounded-tr-[80px] rounded-bl-[80px] object-cover w-full h-full"
+          <Image
+              src={"https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80"}
+              alt={"Luxury Interior"}
+              fill
+              priority
+              className="rounded-tr-[80px] rounded-bl-[80px] object-cover"
             />
             <div className="absolute inset-0 rounded-tr-[80px] rounded-bl-[80px] bg-gradient-to-br from-primary/10 to-transparent pointer-events-none" />
           </div>
