@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Playfair_Display, Inter } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
+import AuthSync from "./Auth";
  
 
 const playfair = Playfair_Display({ subsets: ["latin"] });
@@ -22,6 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider >
+      <AuthSync/>
         <html lang="en">
           <body className={`${inter.variable} ${playfair.className}`}>
             {children}
