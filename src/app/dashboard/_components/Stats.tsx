@@ -1,7 +1,7 @@
 "use client";
 import { Card } from "@/components/ui/card";
 import { useUserStore } from "@/store/useUserStore";
-import { Calendar, Layout, Heart } from "lucide-react";
+import {  Layout, Heart } from "lucide-react";
 function Stats() {
   const { user } = useUserStore();
 
@@ -20,10 +20,9 @@ function Stats() {
     );
   }
   return (
-    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+    <div className="grid md:grid-cols-2 gap-6 mb-8">
       {[
         { icon: Layout, label: "Total Projects", value: "4" },
-        { icon: Calendar, label: "Consultations", value: "8" },
         {
           icon: Heart,
           label: user.credits === 1 ? "Coin Left" : "Coins Left",
