@@ -3,7 +3,7 @@ import { getAuth } from "@clerk/nextjs/server";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "@/app/config/firebase";
 
-// Define the structure for user data
+ 
 interface UserData {
   id: string;
   name: string;
@@ -12,7 +12,6 @@ interface UserData {
   credits: number;
   createdAt: string;
 }
-
 
 export async function POST(req: NextRequest) {
   try {
@@ -33,7 +32,6 @@ export async function POST(req: NextRequest) {
     const docSnap = await getDoc(userRef);
 
     if (!docSnap.exists()) {
-      
       const newUser: UserData = {
         id: userId,
         name: `${firstName} ${lastName}`,
@@ -43,12 +41,17 @@ export async function POST(req: NextRequest) {
         createdAt: new Date().toISOString(),
       };
 
+      // Saves the new user to Firestore
       await setDoc(userRef, newUser);
-      return NextResponse.json({ message: "User added successfully" }, { status: 201 });
+
+      // Returns the full user data to the client
+      return NextResponse.json({ user: newUser }, { status: 201 });
     }
 
-    
-    return NextResponse.json({ message: "User already exists" }, { status: 200 });
+    // If user already exists, return the existing user data
+    const existingUser = docSnap.data() as UserData;
+    return NextResponse.json({ user: existingUser }, { status: 200 });
+
   } catch (error) {
     console.error("Error adding user:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
