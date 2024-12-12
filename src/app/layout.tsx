@@ -25,9 +25,9 @@ export default function RootLayout({
   return (
     <ClerkProvider >
       <AuthSync/>
-      <Toaster />
         <html lang="en">
           <body className={`${inter.variable} ${playfair.className}`}>
+      <Toaster />
             {children}
           </body>
         </html>
