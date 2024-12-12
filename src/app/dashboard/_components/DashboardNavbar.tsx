@@ -2,8 +2,10 @@
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { UserButton } from "@clerk/nextjs";
+import { useUserStore } from "@/store/useUserStore";
 
 function DashboardNavbar() {
+  const {user}=useUserStore();
   return (
     <motion.header
       initial={{ y: -20, opacity: 0 }}
@@ -16,7 +18,11 @@ function DashboardNavbar() {
           MAISON
         </Link>
 
-        <div className="flex items-center space-x-8">
+        <div className="flex items-center space-x-6">
+          <div className="flex flex-row gap-2">
+            <span className="mt-0">🌕</span>
+          <span className="font-bold text-base">{user?.credits}</span>
+          </div>
           <Link href="/" className="hover:text-primary transition-colors">
             Home
           </Link>
