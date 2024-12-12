@@ -3,6 +3,7 @@ import "./globals.css";
 import { Playfair_Display, Inter } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import AuthSync from "./Auth";
+import { Toaster } from "sonner";
  
 
 const playfair = Playfair_Display({ subsets: ["latin"] });
@@ -24,6 +25,7 @@ export default function RootLayout({
   return (
     <ClerkProvider >
       <AuthSync/>
+      <Toaster />
         <html lang="en">
           <body className={`${inter.variable} ${playfair.className}`}>
             {children}
