@@ -1,5 +1,5 @@
 import Projects from "./_components/Projects";
-import Stats from "./_components/Stats";
+ 
  
 
 export default function Dashboard() {
@@ -12,7 +12,6 @@ export default function Dashboard() {
             Manage your projects and consultations
           </p>
         </div>
-        <Stats/>
         <Projects/>
       </div>
     </div>

@@ -17,9 +17,9 @@ export default function Projects() {
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-light">Recent Projects</h2>
+        <h2 className="text-2xl font-light">Projects</h2>
         <Link href="/dashboard/create_design">
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="default">
             <Plus className="w-4 h-4 mr-2" />
             New Project
           </Button>
