@@ -17,7 +17,7 @@ function DashboardNavbar() {
         <Link href="/" className="text-xl font-light tracking-wide">
           MAISON
         </Link>
-
+          
         <div className="flex items-center space-x-6">
           <div className="flex flex-row gap-2">
             <span className="mt-0">🌕</span>
@@ -25,9 +25,6 @@ function DashboardNavbar() {
           </div>
           <Link href="/" className="hover:text-primary transition-colors">
             Home
-          </Link>
-          <Link href="/about" className="hover:text-primary transition-colors">
-            About
           </Link>
           <UserButton/>
         </div>
