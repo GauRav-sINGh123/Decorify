@@ -20,18 +20,26 @@ export function Navbar() {
           MAISON
         </Link>
 
-        <div className="flex items-center space-x-8">
+        <div className="flex items-center space-x-5 sm:space-x-8">
           <Link href="/about" className="hover:text-primary transition-colors">
             About
           </Link>
           {isSignedIn ? (
-            <UserButton
-              appearance={{
-                elements: {
-                  avatarBox: "w-8 h-8",
-                },
-              }}
-            />
+            <div className="flex gap-3">
+              <Link
+                href="/dashboard"
+                className="hover:text-primary transition-colors mt-1"
+              >
+                Dashboard
+              </Link>
+              <UserButton
+                appearance={{
+                  elements: {
+                    avatarBox: "w-8 h-8",
+                  },
+                }}
+              />
+            </div>
           ) : (
             <Link href="/signin">
               <Button variant="outline" className="ml-4">
