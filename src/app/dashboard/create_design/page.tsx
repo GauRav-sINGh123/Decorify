@@ -14,6 +14,9 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { ImagePlus } from "lucide-react";
 import HowItWorks from "../_components/HowItWorks";
+import { toast } from "sonner";
+import { storage } from "@/app/config/firebase";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 const styles = [
   {
@@ -49,7 +52,7 @@ const styles = [
 ];
 
 export default function CreateDesign() {
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [roomType, setRoomType] = useState<string>("");
   const [selectedStyle, setSelectedStyle] = useState<string | null>(null);
   const [requirements, setRequirements] = useState<string>("");
@@ -57,21 +60,9 @@ export default function CreateDesign() {
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       const file = event.target.files[0];
-
-      const validImageTypes = ["image/jpeg", "image/png", "image/webp"];
-      if (validImageTypes.includes(file.type)) {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          setSelectedImage(reader.result as string);
-        };
-        reader.readAsDataURL(file);
-      } else {
-        alert(
-          "Please upload a valid image (JPEG, PNG, or WebP). GIFs are not supported."
-        );
-      }
+      setSelectedImage(file);
     }
-  };
+  }
 
   const handleStyleSelection = (style: string) => {
     if (selectedStyle === style) {
@@ -81,6 +72,23 @@ export default function CreateDesign() {
     }
   };
 
+  const generateDesign=async()=>{
+   const imageUrl=await saveImageInFirebase(selectedImage!);
+   console.log(imageUrl);
+    
+  }
+
+  const saveImageInFirebase = async (file: File) => {
+    try {
+      const storageRef = ref(storage, `design_images/${file.name}`);
+      const snapshot = await uploadBytes(storageRef, file);
+      const downloadURL = await getDownloadURL(snapshot.ref);
+      return downloadURL;
+    } catch (error:any) {
+      toast.error("Error uploading image:", error);
+      throw new Error("Image upload failed.");
+    }
+  };
   return (
     <div className="min-h-screen bg-white py-12 px-4 mt-10">
       <div className="mx-auto max-w-7xl">
@@ -95,32 +103,29 @@ export default function CreateDesign() {
         </div>
 
         <div className="grid lg:grid-cols-2 gap-8 mb-8 px-8 md:px-28">
-          <div className="bg-white rounded-lg p-6 border-2 border-dashed border-[#cac7c7] flex flex-col items-center justify-center h-[300px]">
+          <div className="bg-white rounded-lg p-6 border-2 border-dashed border-[#cac7c7] flex flex-col items-center justify-center h-[350px]">
             <ImagePlus className="h-5 w-5 text-[#6B6B6B] mb-4" />
-            <p className="text-sm text-[#6B6B6B] mb-4">
-              Select Image of your room
-            </p>
-            <input
-              type="file"
-              accept="image/jpeg,image/png,image/webp"
-              onChange={handleImageUpload}
-              className="hidden"
-              id="image-upload"
-            />
-            <Button
-              className="bg-[#2C2C2C] hover:bg-[#404040] text-white"
-              onClick={() => document.getElementById("image-upload")?.click()}
-            >
-              Upload Image
-            </Button>
+
+            <div className="flex flex-col gap-4">
+              <label htmlFor="image-upload" className="cursor-pointer">
+                Click to Select Image of your room
+              </label>
+              <input
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  onChange={handleImageUpload}
+                  className="hidden"
+                  id="image-upload"
+                />
+               
+            </div>
 
             {selectedImage && (
               <div className="relative w-full h-48 mt-4">
                 <Image
-                  src={selectedImage}
-                  alt="Uploaded Room Image"
-                  layout="fill"
-                  objectFit="cover"
+                  src={URL.createObjectURL(selectedImage)}
+                  alt={"Uploaded Room Image"}
+                  fill
                   className="rounded-lg"
                 />
               </div>
@@ -188,7 +193,9 @@ export default function CreateDesign() {
               />
             </div>
 
-            <Button className="w-full bg-[#2C2C2C] hover:bg-[#404040] text-white">
+            <Button 
+            onClick={generateDesign}
+            className="w-full bg-[#2C2C2C] hover:bg-[#404040] text-white">
               Generate Design
             </Button>
 
