@@ -27,7 +27,7 @@ export default function RootLayout({
       <AuthSync/>
         <html lang="en">
           <body className={`${inter.variable} ${playfair.className}`}>
-      <Toaster />
+      <Toaster position="top-right" />
             {children}
           </body>
         </html>
