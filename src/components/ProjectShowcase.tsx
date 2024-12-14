@@ -3,24 +3,8 @@ import Image from "next/image"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
+import {projects} from "@/constants/Constants"
 
-const projects = [
-  {
-    title: "Modern Minimalist Villa",
-    location: "Beverly Hills",
-    image: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&q=80"
-  },
-  {
-    title: "Urban Loft Design",
-    location: "New York",
-    image: "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&q=80"
-  },
-  {
-    title: "Coastal Retreat",
-    location: "Malibu",
-    image: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&q=80"
-  }
-]
 
 export function ProjectShowcase() {
   return (

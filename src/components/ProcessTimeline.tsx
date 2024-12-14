@@ -1,29 +1,8 @@
 "use client"
 
-import { motion } from "framer-motion"
+import { motion } from "framer-motion";
+import {steps} from "@/constants/Constants";
 
-const steps = [
-  {
-    number: "01",
-    title: "Initial Consultation",
-    description: "We discuss your vision, requirements, and budget to create a personalized plan."
-  },
-  {
-    number: "02",
-    title: "AI Analysis",
-    description: "Our AI system analyzes your space and generates optimal design recommendations."
-  },
-  {
-    number: "03",
-    title: "Design Development",
-    description: "We create detailed designs and 3D visualizations for your approval."
-  },
-  {
-    number: "04",
-    title: "Implementation",
-    description: "Our expert team brings the approved design to life with precision."
-  }
-]
 
 export default function ProcessTimeline() {
   return (
@@ -39,7 +18,7 @@ export default function ProcessTimeline() {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           {steps.map((step, index) => (
             <motion.div
-              key={index}
+              key={step?.title}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}

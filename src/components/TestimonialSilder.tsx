@@ -4,27 +4,8 @@ import { motion } from "framer-motion"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { ChevronLeft, ChevronRight, Quote } from "lucide-react"
+import {testimonials } from "@/constants/Constants"
 
-const testimonials = [
-  {
-    quote: "The AI-powered design recommendations were spot on! It saved us so much time in the decision-making process.",
-    author: "Sarah Johnson",
-    role: "Homeowner",
-    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80"
-  },
-  {
-    quote: "Maison transformed our office space into a productive and inspiring environment. The attention to detail was impressive.",
-    author: "Michael Chen",
-    role: "CEO, TechStart",
-    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80"
-  },
-  {
-    quote: "The team's expertise in blending traditional elements with modern technology created the perfect balance in our home.",
-    author: "Emma Thompson",
-    role: "Interior Design Enthusiast",
-    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80"
-  }
-]
 
 export function TestimonialSlider() {
   const [currentIndex, setCurrentIndex] = useState(0)
