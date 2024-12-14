@@ -83,13 +83,14 @@ export default function CreateDesign() {
     setLoading(true);
     try {
       const imageUrl = await saveImageInFirebase(selectedImage);
-      await axios.post("/api/redesign", {
+      const response = await axios.post("/api/redesign", {
         imageUrl,
         roomType,
         selectedStyle,
         requirements,
       });
       toast.success("Design generation started!");
+      console.log(response.data);
       setLoading(false);
       setSelectedImage(null);
       setRoomType("");
