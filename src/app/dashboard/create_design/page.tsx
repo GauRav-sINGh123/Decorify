@@ -7,10 +7,7 @@ import { Card } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
-  DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Select,
@@ -26,7 +23,6 @@ import { toast } from "sonner";
 import { storage } from "@/app/config/firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import axios from "axios";
-import { useUserStore } from "@/store/useUserStore";
 import React from "react";
 import ReactBeforeSliderComponent from "react-before-after-slider-component";
 import "react-before-after-slider-component/dist/build.css";
@@ -40,15 +36,8 @@ export default function CreateDesign() {
   const [loading, setLoading] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [response,setResponse]= useState<any>(null);
-  const addProject = useUserStore((state) => state.addProject);
  
 
-  const FIRST_IMAGE = {
-    imageUrl: response?.oldImage,
-  };
-  const SECOND_IMAGE = {
-    imageUrl: response?.newImage,
-  };
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       const file = event.target.files[0];
@@ -63,6 +52,7 @@ export default function CreateDesign() {
       setSelectedStyle(style);
     }
   };
+ 
 
   const generateDesign = async () => {
     if (!selectedImage || !roomType || !selectedStyle) {
@@ -80,15 +70,7 @@ export default function CreateDesign() {
 
       const designData = response.data;
       setResponse(designData)
-      addProject({
-        id: designData.id,
-        createdAt: designData.createdAt,
-        newImage: designData.newImage,
-        oldImage: imageUrl || designData.oldImage,
-        requirements: designData.requirements || requirements,
-        roomType,
-        selectedStyle,
-      });
+       
 
       toast.success("Design generation started!");
       setLoading(false);
@@ -104,6 +86,7 @@ export default function CreateDesign() {
     setLoading(false);
   };
 
+  // Image Uploaded to Firebase Storage
   const saveImageInFirebase = async (file: File) => {
     try {
       const storageRef = ref(storage, `design_images/${file.name}`);
@@ -113,6 +96,14 @@ export default function CreateDesign() {
     } catch (error: any) {
       toast.error("Error uploading image:", error);
     }
+  };
+
+   
+  const FIRST_IMAGE = {
+    imageUrl: response?.oldImage,
+  };
+  const SECOND_IMAGE = {
+    imageUrl: response?.newImage,
   };
   return (
     <div className="min-h-screen bg-white py-12 px-4 mt-10">
