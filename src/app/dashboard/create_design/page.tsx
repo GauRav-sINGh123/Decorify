@@ -5,6 +5,14 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -18,39 +26,11 @@ import { toast } from "sonner";
 import { storage } from "@/app/config/firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import axios from "axios";
-
-const styles = [
-  {
-    name: "Modern",
-    image:
-      "https://images.unsplash.com/photo-1631679706909-1844bbd07221?q=80&w=500",
-  },
-  {
-    name: "Industrial",
-    image:
-      "https://images.unsplash.com/photo-1565182999561-18d7dc61c393?q=80&w=500",
-  },
-  {
-    name: "Bohemian",
-    image:
-      "https://images.unsplash.com/photo-1617103996702-96ff29b1c467?q=80&w=500",
-  },
-  {
-    name: "Traditional",
-    image:
-      "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=500",
-  },
-  {
-    name: "Minimalist",
-    image:
-      "https://images.unsplash.com/photo-1598928506311-c55ded91a20c?q=80&w=500",
-  },
-  {
-    name: "Scandinavian",
-    image:
-      "https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?q=80&w=500",
-  },
-];
+import { useUserStore } from "@/store/useUserStore";
+import React from "react";
+import ReactBeforeSliderComponent from "react-before-after-slider-component";
+import "react-before-after-slider-component/dist/build.css";
+import {styles} from "@/constants/Constants";
 
 export default function CreateDesign() {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
@@ -58,14 +38,23 @@ export default function CreateDesign() {
   const [selectedStyle, setSelectedStyle] = useState<string | null>(null);
   const [requirements, setRequirements] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [openDialog, setOpenDialog] = useState<boolean>(false);
+  const [response,setResponse]= useState<any>(null);
+  const addProject = useUserStore((state) => state.addProject);
+ 
 
-
+  const FIRST_IMAGE = {
+    imageUrl: response?.oldImage,
+  };
+  const SECOND_IMAGE = {
+    imageUrl: response?.newImage,
+  };
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
       const file = event.target.files[0];
       setSelectedImage(file);
     }
-  }
+  };
 
   const handleStyleSelection = (style: string) => {
     if (selectedStyle === style) {
@@ -76,7 +65,6 @@ export default function CreateDesign() {
   };
 
   const generateDesign = async () => {
-   
     if (!selectedImage || !roomType || !selectedStyle) {
       return toast.error("Please fill all required fields");
     }
@@ -89,14 +77,26 @@ export default function CreateDesign() {
         selectedStyle,
         requirements,
       });
+
+      const designData = response.data;
+      setResponse(designData)
+      addProject({
+        id: designData.id,
+        createdAt: designData.createdAt,
+        newImage: designData.newImage,
+        oldImage: imageUrl || designData.oldImage,
+        requirements: designData.requirements || requirements,
+        roomType,
+        selectedStyle,
+      });
+
       toast.success("Design generation started!");
-      console.log(response.data);
       setLoading(false);
+      setOpenDialog(true);
       setSelectedImage(null);
       setRoomType("");
       setSelectedStyle("");
       setRequirements("");
-
     } catch (error) {
       toast.error("Something went wrong while generating the design");
       setLoading(false);
@@ -110,7 +110,7 @@ export default function CreateDesign() {
       const snapshot = await uploadBytes(storageRef, file);
       const downloadURL = await getDownloadURL(snapshot.ref);
       return downloadURL;
-    } catch (error:any) {
+    } catch (error: any) {
       toast.error("Error uploading image:", error);
     }
   };
@@ -136,13 +136,12 @@ export default function CreateDesign() {
                 Click to Select Image of your room
               </label>
               <input
-                  type="file"
-                  accept="image/jpeg,image/png,image/webp"
-                  onChange={handleImageUpload}
-                  className="hidden"
-                  id="image-upload"
-                />
-               
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                onChange={handleImageUpload}
+                className="hidden"
+                id="image-upload"
+              />
             </div>
 
             {selectedImage && (
@@ -191,11 +190,7 @@ export default function CreateDesign() {
                     onClick={() => handleStyleSelection(style.name)}
                   >
                     <div className="aspect-video relative mb-2 overflow-hidden rounded">
-                      <Image
-                        src={style.image}
-                        alt={style.name}
-                        fill
-                      />
+                      <Image src={style.image} alt={style.name} fill />
                     </div>
                     <p className="text-sm font-medium text-center text-[#2C2C2C]">
                       {style.name}
@@ -217,10 +212,11 @@ export default function CreateDesign() {
               />
             </div>
 
-            <Button 
-            onClick={generateDesign}
-            disabled={loading}
-            className="w-full bg-[#2C2C2C] hover:bg-[#404040] text-white">
+            <Button
+              onClick={generateDesign}
+              disabled={loading}
+              className="w-full bg-[#2C2C2C] hover:bg-[#404040] text-white"
+            >
               {loading ? "Generating..." : "Generate Design"}
             </Button>
 
@@ -230,6 +226,18 @@ export default function CreateDesign() {
           </div>
         </div>
         <HowItWorks />
+
+        <Dialog open={openDialog} onOpenChange={setOpenDialog}>
+          <DialogContent style={{ maxWidth: "500px", padding: "20px" }}>
+            <DialogHeader>
+              <ReactBeforeSliderComponent
+                firstImage={FIRST_IMAGE}
+                secondImage={SECOND_IMAGE}
+                className="mt-4"
+              />
+            </DialogHeader>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );

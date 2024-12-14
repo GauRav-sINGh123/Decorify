@@ -37,9 +37,8 @@ export async function POST(req: NextRequest) {
     );
 
  
-    const projectsCollection = collection(db, "projects");
+    const projectsCollection = collection(db, "users/" + userId + "/projects");
     const newProject = {
-      userId,
       oldImage:imageUrl,
       roomType,
       selectedStyle,
