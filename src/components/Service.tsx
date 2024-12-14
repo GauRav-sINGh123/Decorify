@@ -1,5 +1,5 @@
 import { ServiceCard } from './ServiceCard'
-import {service} from "@/constants/Constants";
+import {services} from "@/constants/Constants";
 
 
 function Service() {
