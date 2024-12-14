@@ -17,6 +17,7 @@ import HowItWorks from "../_components/HowItWorks";
 import { toast } from "sonner";
 import { storage } from "@/app/config/firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import axios from "axios";
 
 const styles = [
   {
@@ -56,6 +57,8 @@ export default function CreateDesign() {
   const [roomType, setRoomType] = useState<string>("");
   const [selectedStyle, setSelectedStyle] = useState<string | null>(null);
   const [requirements, setRequirements] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -72,11 +75,33 @@ export default function CreateDesign() {
     }
   };
 
-  const generateDesign=async()=>{
-   const imageUrl=await saveImageInFirebase(selectedImage!);
-   console.log(imageUrl);
-    
-  }
+  const generateDesign = async () => {
+   
+    if (!selectedImage || !roomType || !selectedStyle) {
+      return toast.error("Please fill all required fields");
+    }
+    setLoading(true);
+    try {
+      const imageUrl = await saveImageInFirebase(selectedImage);
+      await axios.post("/api/redesign", {
+        imageUrl,
+        roomType,
+        selectedStyle,
+        requirements,
+      });
+      toast.success("Design generation started!");
+      setLoading(false);
+      setSelectedImage(null);
+      setRoomType("");
+      setSelectedStyle("");
+      setRequirements("");
+
+    } catch (error) {
+      toast.error("Something went wrong while generating the design");
+      setLoading(false);
+    }
+    setLoading(false);
+  };
 
   const saveImageInFirebase = async (file: File) => {
     try {
@@ -86,7 +111,6 @@ export default function CreateDesign() {
       return downloadURL;
     } catch (error:any) {
       toast.error("Error uploading image:", error);
-      throw new Error("Image upload failed.");
     }
   };
   return (
@@ -169,8 +193,7 @@ export default function CreateDesign() {
                       <Image
                         src={style.image}
                         alt={style.name}
-                        layout="fill"
-                        objectFit="cover"
+                        fill
                       />
                     </div>
                     <p className="text-sm font-medium text-center text-[#2C2C2C]">
@@ -195,8 +218,9 @@ export default function CreateDesign() {
 
             <Button 
             onClick={generateDesign}
+            disabled={loading}
             className="w-full bg-[#2C2C2C] hover:bg-[#404040] text-white">
-              Generate Design
+              {loading ? "Generating..." : "Generate Design"}
             </Button>
 
             <p className="text-xs text-[#6B6B6B] text-center">
