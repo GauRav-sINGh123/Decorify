@@ -12,6 +12,7 @@ import LoadingSkeleton from "./LoadingSkeleton";
 import Image from "next/image";
 import { useUserStore } from "@/store/useUserStore";
 import DialogComponent from "./DialogComponent";
+import Link from "next/link";
 
 interface Project {
   id: string;
@@ -92,10 +93,12 @@ export default function Projects() {
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-light">Projects</h2>
-          <Button variant="outline" size="default">
+         < Link href={"/dashboard/create_design"}>
+         <Button variant="outline" size="default">
             <Plus className="w-4 h-4 mr-2" />
             New Project
           </Button>
+         </Link>
         </div>
 
         {projects.length === 0 ? (
