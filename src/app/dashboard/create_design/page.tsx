@@ -20,6 +20,7 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import axios from "axios";
 import {styles} from "@/constants/Constants";
 import DialogComponent from "../_components/DialogComponent";
+import { useUserStore } from "@/store/useUserStore";
 
 export default function CreateDesign() {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
@@ -29,7 +30,7 @@ export default function CreateDesign() {
   const [loading, setLoading] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
   const [response,setResponse]= useState<any>(null);
- 
+  const { user, setUser } = useUserStore(); 
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -51,6 +52,9 @@ export default function CreateDesign() {
     if (!selectedImage || !roomType || !selectedStyle) {
       return toast.error("Please fill all required fields");
     }
+    if (user && user.credits <= 0) {
+      return toast.error("You do not have enough credits to generate a design.");
+    }
     setLoading(true);
     try {
       const imageUrl = await saveImageInFirebase(selectedImage);
@@ -63,7 +67,10 @@ export default function CreateDesign() {
 
       const designData = response.data;
       setResponse(designData)
-       
+      if (user) {
+        setUser({ ...user, credits: user.credits - 1 });
+      }
+
 
       toast.success("Design genereted successfully!");
       setLoading(false);
@@ -73,7 +80,7 @@ export default function CreateDesign() {
       setSelectedStyle("");
       setRequirements("");
     } catch (error) {
-      toast.error("Something went wrong while generating the design");
+      toast.error("Something went wrong.Please try again.");
       setLoading(false);
     }
     setLoading(false);
