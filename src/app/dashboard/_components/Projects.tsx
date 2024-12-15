@@ -10,6 +10,8 @@ import { Plus } from 'lucide-react';
 import { db } from '@/app/config/firebase';
 import LoadingSkeleton from './LoadingSkeleton';
 import Image from "next/image";
+import { useUserStore } from '@/store/useUserStore';
+ 
 
 interface Project {
   id: string;
@@ -23,19 +25,18 @@ interface Project {
 
 export default function Projects() {
   const { user, isLoaded } = useUser();
-  const [projects, setProjects] = useState<Project[]>([]);
+  const { projects, setProjects } = useUserStore();  
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchProjects = async () => {
-      if (!isLoaded || !user) return;
+      if (!isLoaded || !user || projects.length > 0) return;  
 
       try {
-        
+        console.log("Api Called")
         const projectsRef = collection(db, 'users', user?.id, 'projects');
         const querySnapshot = await getDocs(projectsRef);
 
-      
         const projectsData: Project[] = querySnapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
@@ -50,8 +51,8 @@ export default function Projects() {
     };
 
     fetchProjects();
-  }, [isLoaded, user]);
-
+    setLoading(false);
+  }, [isLoaded, user, setProjects, projects.length]);  
 
   const handleDelete = async (projectId: string) => {
     if (!user) return;
@@ -59,7 +60,8 @@ export default function Projects() {
     try {
       await deleteDoc(doc(db, 'users', user.id, 'projects', projectId));
 
-      setProjects((prevProjects) => prevProjects.filter((project) => project.id !== projectId));
+      const updatedProjects = projects.filter((project) => project.id !== projectId);
+      setProjects(updatedProjects);
 
       toast.success('Project deleted successfully');
     } catch (err) {
@@ -69,14 +71,13 @@ export default function Projects() {
 
   if (loading) {
     return (
-      <LoadingSkeleton/>
+      <LoadingSkeleton />
     );
   }
 
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-7xl mx-auto">
-       
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-light">Projects</h2>
           <Button variant="outline" size="default">
@@ -108,9 +109,8 @@ export default function Projects() {
                     <p className="text-sm text-black">
                       Created At: <span className="font-medium">{new Date(project.createdAt).toLocaleDateString()}</span>
                     </p>
-                    <p className="text-sm  text-black">Room Type: {project.roomType}</p>
-                    <p className="text-sm  text-black">Style: {project.selectedStyle}</p>
-                    
+                    <p className="text-sm text-black">Room Type: {project.roomType}</p>
+                    <p className="text-sm text-black">Style: {project.selectedStyle}</p>
                   </div>
 
                   <Button
