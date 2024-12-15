@@ -2,7 +2,7 @@
 
 Maison is an innovative AI-powered interior design platform designed to help users create personalized, functional, and aesthetically pleasing home interiors. By leveraging advanced AI models, Maison suggests interior design ideas based on user preferences, delivering tailored recommendations that suit their style. Built with modern technologies such as Next.js, Firebase, Replicate AI, Zustand, Tailwind CSS, TypeScript, Shadcn, and Clerk Auth, Maison provides a seamless and interactive experience for all users.
 
-![Maison Preview]("/public/Maison.jpg)
+![Maison Preview]("./public/Maison.jpg)
 
 ## Features
 
@@ -16,20 +16,13 @@ Maison is an innovative AI-powered interior design platform designed to help use
 
 ## Technologies Used
 
-- **Next.js**: A React framework for building fast, server-rendered web applications.
-- **Firebase**: For real-time backend services like database management, authentication, and storage.
-- **Replicate AI**: AI model used for generating interior design ideas and visualizations.
-- **Zustand**: A lightweight state management library for React applications.
-- **Tailwind CSS**: A utility-first CSS framework for building custom designs with minimal effort.
-- **TypeScript**: A superset of JavaScript, providing static typing to improve the development process.
-- **Shadcn**: A collection of React UI components that help build fast and customizable interfaces.
-- **Clerk Auth**: A user authentication solution, handling sign-ups, log-ins, and secure session management.
+- ![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat&logo=nextdotjs&logoColor=white) **Next.js**: A React framework for building fast, server-rendered web applications.
+- ![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=flat&logo=firebase&logoColor=white) **Firebase**: For real-time backend services like database management, authentication, and storage.
+- ![Replicate AI](https://img.shields.io/badge/Replicate-000000?style=flat&logo=replicate&logoColor=white) **Replicate AI**: AI model used for generating interior design ideas and visualizations.
+- ![Zustand](https://img.shields.io/badge/Zustand-000000?style=flat&logo=zustand&logoColor=white) **Zustand**: A lightweight state management library for React applications.
+- ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38BDF8?style=flat&logo=tailwind-css&logoColor=white) **Tailwind CSS**: A utility-first CSS framework for building custom designs with minimal effort.
+- ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white) **TypeScript**: A superset of JavaScript, providing static typing to improve the development process.
+- ![Shadcn](https://img.shields.io/badge/Shadcn-FF0000?style=flat&logo=shadcn&logoColor=white) **Shadcn**: A collection of React UI components that help build fast and customizable interfaces.
+- ![Clerk](https://img.shields.io/badge/Clerk-2D3B3D?style=flat&logo=clerk&logoColor=white) **Clerk Auth**: A user authentication solution, handling sign-ups, log-ins, and secure session management.
 
-## Installation
-
-To get started with Maison locally, follow these steps:
-
-1. **Clone the repository**  
-   Clone the Maison repository to your local machine:
-   ```bash
-   git clone https://github.com/gaurav-singh123/maison.git
+ 
