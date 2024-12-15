@@ -157,12 +157,12 @@ export default function CreateDesign() {
                   <SelectValue placeholder="Choose room type" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="living">Living Room</SelectItem>
-                  <SelectItem value="bedroom">Bedroom</SelectItem>
-                  <SelectItem value="kitchen">Kitchen</SelectItem>
-                  <SelectItem value="bathroom">Bathroom</SelectItem>
-                  <SelectItem value="office">Home Office</SelectItem>
-                  <SelectItem value="dining">Dining Room</SelectItem>
+                  <SelectItem value="Living">Living Room</SelectItem>
+                  <SelectItem value="Bedroom">Bedroom</SelectItem>
+                  <SelectItem value="Kitchen">Kitchen</SelectItem>
+                  <SelectItem value="Bathroom">Bathroom</SelectItem>
+                  <SelectItem value="Office">Home Office</SelectItem>
+                  <SelectItem value="Dining">Dining Room</SelectItem>
                 </SelectContent>
               </Select>
             </div>
