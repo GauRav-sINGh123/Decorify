@@ -1,26 +1,10 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-
+import { UserData,Project} from "@/types/types";
  
-interface UserData {
-  id: string;
-  name: string;
-  email: string;
-  image: string;
-  credits: number;
-  createdAt: string;
-}
-
  
-interface Project {
-  id: string;
-  newImage: string;
-  oldImage: string;
-  requirements: string;
-  roomType: string;
-  selectedStyle: string;
-  createdAt: string;
-}
+
+  
 
  
 interface UserState {

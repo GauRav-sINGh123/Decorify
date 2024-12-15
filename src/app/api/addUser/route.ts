@@ -2,16 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { getAuth } from "@clerk/nextjs/server";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "@/app/config/firebase";
-
+import {UserData } from "@/types/types"
  
-interface UserData {
-  id: string;
-  name: string;
-  email: string;
-  image: string;
-  credits: number;
-  createdAt: string;
-}
 
 export async function POST(req: NextRequest) {
   try {

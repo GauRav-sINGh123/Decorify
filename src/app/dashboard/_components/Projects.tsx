@@ -13,16 +13,8 @@ import Image from "next/image";
 import { useUserStore } from "@/store/useUserStore";
 import DialogComponent from "./DialogComponent";
 import Link from "next/link";
+import {Project} from "@/types/types";
 
-interface Project {
-  id: string;
-  createdAt: string;
-  newImage: string;
-  oldImage: string;
-  requirements: string;
-  roomType: string;
-  selectedStyle: string;
-}
 
 export default function Projects() {
   const { user, isLoaded } = useUser();
