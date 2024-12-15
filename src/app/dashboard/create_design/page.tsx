@@ -15,12 +15,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { ImagePlus } from "lucide-react";
 import HowItWorks from "../_components/HowItWorks";
 import { toast } from "sonner";
-import { storage } from "@/app/config/firebase";
+import { db, storage } from "@/app/config/firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import axios from "axios";
 import {styles} from "@/constants/Constants";
 import DialogComponent from "../_components/DialogComponent";
 import { useUserStore } from "@/store/useUserStore";
+import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
 
 export default function CreateDesign() {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
@@ -29,8 +30,8 @@ export default function CreateDesign() {
   const [requirements, setRequirements] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
-  const [response,setResponse]= useState<any>(null);
-  const { user, setUser } = useUserStore(); 
+  const [response, setResponse] = useState<any>(null);
+  const { user, setUser } = useUserStore();
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files) {
@@ -46,64 +47,73 @@ export default function CreateDesign() {
       setSelectedStyle(style);
     }
   };
- 
 
   const generateDesign = async () => {
     if (!selectedImage || !roomType || !selectedStyle) {
       return toast.error("Please fill all required fields");
     }
+
     if (user && user.credits <= 0) {
       return toast.error("You do not have enough credits to generate a design.");
     }
+
     setLoading(true);
     try {
       const imageUrl = await saveImageInFirebase(selectedImage);
-      const response = await axios.post("/api/redesign", {
+
+      const { data } = await axios.post("/api/redesign", {
         imageUrl,
         roomType,
         selectedStyle,
         requirements,
       });
 
-      const designData = response.data;
-      setResponse(designData)
+      const newImage = data.newImage;
+
       if (user) {
         setUser({ ...user, credits: user.credits - 1 });
+        const userDocRef = doc(db, "users", user.id);
+        await updateDoc(userDocRef, { credits: user.credits - 1 });
       }
 
+      const projectsCollection = collection(db, "users/" + user?.id + "/projects");
+      const newProject = {
+        oldImage: imageUrl,
+        roomType,
+        selectedStyle,
+        requirements: requirements || "",
+        newImage,
+        createdAt: new Date().toISOString(),
+      };
+      await addDoc(projectsCollection, newProject);
 
-      toast.success("Design genereted successfully!");
-      setLoading(false);
+      setResponse({ oldImage: imageUrl, newImage });
       setOpenDialog(true);
-      setSelectedImage(null);
-      setRoomType("");
-      setSelectedStyle("");
-      setRequirements("");
+
+      toast.success("Design generated successfully!");
     } catch (error) {
-      toast.error("Something went wrong.Please try again.");
+      toast.error("Something went wrong. Please try again.");
+    } finally {
       setLoading(false);
+      resetFields();
     }
-    setLoading(false);
   };
 
-  // Image Upload to Firebase Storage
   const saveImageInFirebase = async (file: File) => {
     try {
       const storageRef = ref(storage, `design_images/${file.name}`);
       const snapshot = await uploadBytes(storageRef, file);
-      const downloadURL = await getDownloadURL(snapshot.ref);
-      return downloadURL;
-    } catch (error: any) {
-      toast.error("Error uploading image:", error);
+      return await getDownloadURL(snapshot.ref);
+    } catch (error) {
+      toast.error("Error uploading image. Please try again.");
     }
   };
 
-   
-  const FIRST_IMAGE = {
-    imageUrl: response?.oldImage,
-  };
-  const SECOND_IMAGE = {
-    imageUrl: response?.newImage,
+  const resetFields = () => {
+    setSelectedImage(null);
+    setRoomType("");
+    setSelectedStyle(null);
+    setRequirements("");
   };
   return (
     <div className="min-h-screen bg-white py-12 px-4 mt-10">
@@ -221,8 +231,8 @@ export default function CreateDesign() {
         <DialogComponent
           open={openDialog}
           onOpenChange={setOpenDialog}
-          firstImage={FIRST_IMAGE}
-          secondImage={SECOND_IMAGE}
+          firstImage={{ imageUrl: response?.oldImage }}
+          secondImage={{ imageUrl: response?.newImage }}
         />
 
       </div>
