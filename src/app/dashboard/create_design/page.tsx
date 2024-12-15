@@ -66,6 +66,8 @@ export default function CreateDesign() {
         roomType,
         selectedStyle,
         requirements,
+      },{
+        timeout: 120000  
       });
 
       const newImage = data.newImage;
