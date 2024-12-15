@@ -1,17 +1,17 @@
 "use client";
 
-import { useEffect, useState } from 'react';
-import { useUser } from '@clerk/nextjs';
-import { collection, deleteDoc, doc, getDocs } from 'firebase/firestore';
-import { toast } from 'sonner';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Plus } from 'lucide-react';
-import { db } from '@/app/config/firebase';
-import LoadingSkeleton from './LoadingSkeleton';
+import { useEffect, useState } from "react";
+import { useUser } from "@clerk/nextjs";
+import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Plus } from "lucide-react";
+import { db } from "@/app/config/firebase";
+import LoadingSkeleton from "./LoadingSkeleton";
 import Image from "next/image";
-import { useUserStore } from '@/store/useUserStore';
- 
+import { useUserStore } from "@/store/useUserStore";
+import DialogComponent from "./DialogComponent";
 
 interface Project {
   id: string;
@@ -25,16 +25,18 @@ interface Project {
 
 export default function Projects() {
   const { user, isLoaded } = useUser();
-  const { projects, setProjects } = useUserStore();  
+  const { projects, setProjects } = useUserStore();
   const [loading, setLoading] = useState<boolean>(true);
+  const [openDialog, setOpenDialog] = useState<boolean>(false);
+ 
 
   useEffect(() => {
     const fetchProjects = async () => {
-      if (!isLoaded || !user || projects.length > 0) return;  
+      if (!isLoaded || !user || projects.length > 0) return;
 
       try {
-        console.log("Api Called")
-        const projectsRef = collection(db, 'users', user?.id, 'projects');
+        console.log("Api Called");
+        const projectsRef = collection(db, "users", user?.id, "projects");
         const querySnapshot = await getDocs(projectsRef);
 
         const projectsData: Project[] = querySnapshot.docs.map((doc) => ({
@@ -44,7 +46,10 @@ export default function Projects() {
 
         setProjects(projectsData);
       } catch (err) {
-        toast.error("Error fetching projects: " + (err instanceof Error ? err.message : "Unknown"));
+        toast.error(
+          "Error fetching projects: " +
+            (err instanceof Error ? err.message : "Unknown")
+        );
       } finally {
         setLoading(false);
       }
@@ -52,27 +57,35 @@ export default function Projects() {
 
     fetchProjects();
     setLoading(false);
-  }, [isLoaded, user, setProjects, projects.length]);  
+  }, [isLoaded, user, setProjects, projects.length]);
 
   const handleDelete = async (projectId: string) => {
     if (!user) return;
 
     try {
-      await deleteDoc(doc(db, 'users', user.id, 'projects', projectId));
+      await deleteDoc(doc(db, "users", user.id, "projects", projectId));
 
-      const updatedProjects = projects.filter((project) => project.id !== projectId);
+      const updatedProjects = projects.filter(
+        (project) => project.id !== projectId
+      );
       setProjects(updatedProjects);
 
-      toast.success('Project deleted successfully');
+      toast.success("Project deleted successfully");
     } catch (err) {
-      toast.error("Error deleting project: " + (err instanceof Error ? err.message : "Unknown"));
+      toast.error(
+        "Error deleting project: " +
+          (err instanceof Error ? err.message : "Unknown")
+      );
     }
   };
 
+  const handleImageClick = (project: Project) => {
+    
+    setOpenDialog(true);
+  };
+
   if (loading) {
-    return (
-      <LoadingSkeleton />
-    );
+    return <LoadingSkeleton />;
   }
 
   return (
@@ -97,20 +110,28 @@ export default function Projects() {
                 <div className="space-y-4">
                   <div className="relative w-full h-48">
                     <Image
-                      src={`${project.newImage}` || '/placeholder.jpg'}
+                      src={project.newImage || "/placeholder.jpg"}
                       alt={project.id}
                       fill
                       quality={60}
                       className="object-cover rounded-lg w-full h-full"
+                      onClick={() => handleImageClick(project)}
                     />
                   </div>
 
                   <div>
                     <p className="text-sm text-black">
-                      Created At: <span className="font-medium">{new Date(project.createdAt).toLocaleDateString()}</span>
+                      Created At:{" "}
+                      <span className="font-medium">
+                        {new Date(project.createdAt).toLocaleDateString()}
+                      </span>
                     </p>
-                    <p className="text-sm text-black">Room Type: {project.roomType}</p>
-                    <p className="text-sm text-black">Style: {project.selectedStyle}</p>
+                    <p className="text-sm text-black">
+                      Room Type: {project.roomType}
+                    </p>
+                    <p className="text-sm text-black">
+                      Style: {project.selectedStyle}
+                    </p>
                   </div>
 
                   <Button
@@ -120,6 +141,12 @@ export default function Projects() {
                   >
                     Delete
                   </Button>
+                  <DialogComponent
+                    open={openDialog}
+                    onOpenChange={setOpenDialog}
+                    firstImage={{ imageUrl: project.oldImage }}   
+                    secondImage={{ imageUrl: project.newImage }} 
+                  />
                 </div>
               </Card>
             ))}
