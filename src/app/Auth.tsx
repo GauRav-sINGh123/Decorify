@@ -8,11 +8,16 @@ import { toast } from "sonner";
 
 const AuthSync = () => {
   const { user } = useUser();
+  const storedUser = useUserStore((state) => state.user);
   const setUser = useUserStore((state) => state.setUser);  
 
   useEffect(() => {
+
     const saveUserToDB = async () => {
-      if (user) {
+       if(!user) return;
+       
+       if (storedUser?.id === user.id) return;
+
         try {
           const userData = {
             firstName: user.firstName,
@@ -31,11 +36,10 @@ const AuthSync = () => {
         } catch (error: any) {
           toast.error("Something went wrong:", error.response || error.message);
         }
-      }
     };
 
     saveUserToDB();
-  }, [user, setUser]);
+  }, [user, setUser,storedUser]);
 
   return null;  
 };
