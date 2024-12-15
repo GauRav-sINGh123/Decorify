@@ -2,7 +2,7 @@
 
 Maison is an innovative AI-powered interior design platform designed to help users create personalized, functional, and aesthetically pleasing home interiors. By leveraging advanced AI models, Maison suggests interior design ideas based on user preferences, delivering tailored recommendations that suit their style. Built with modern technologies such as Next.js, Firebase, Replicate AI, Zustand, Tailwind CSS, TypeScript, Shadcn, and Clerk Auth, Maison provides a seamless and interactive experience for all users.
 
-![Maison Preview]("./public/Maison.jpg)
+![Maison Preview]("./public/Maison.jpg")
 
 ## Features
 
