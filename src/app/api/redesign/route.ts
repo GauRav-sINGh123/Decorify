@@ -57,11 +57,19 @@ export async function POST(req: NextRequest) {
         (requirements ? `, ${requirements}` : ""),
     };
 
-    const replicateOutput = await replicate.run(
-      "adirik/interior-design:76604baddc85b1b4616e1c6475eca080da339c8875bd4996705440484a6eac38",
-      { input }
-    );
- 
+    let replicateOutput;
+    try {
+      replicateOutput = await replicate.run(
+        "adirik/interior-design:76604baddc85b1b4616e1c6475eca080da339c8875bd4996705440484a6eac38",
+        { input }
+      );
+    } catch (replicateError) {
+      console.error("Error with Replicate API:", replicateError);
+      return NextResponse.json(
+        { message: "Failed to process the design" },
+        { status: 500 }
+      );
+    }
     await updateDoc(userDocRef, {
       credits: currentCredits - 1,
     });
