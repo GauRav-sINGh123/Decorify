@@ -5,11 +5,6 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-} from "@/components/ui/dialog";
-import {
   Select,
   SelectContent,
   SelectItem,
@@ -23,10 +18,8 @@ import { toast } from "sonner";
 import { storage } from "@/app/config/firebase";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import axios from "axios";
-import React from "react";
-import ReactBeforeSliderComponent from "react-before-after-slider-component";
-import "react-before-after-slider-component/dist/build.css";
 import {styles} from "@/constants/Constants";
+import DialogComponent from "../_components/DialogComponent";
 
 export default function CreateDesign() {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
@@ -72,7 +65,7 @@ export default function CreateDesign() {
       setResponse(designData)
        
 
-      toast.success("Design generation started!");
+      toast.success("Design genereted successfully!");
       setLoading(false);
       setOpenDialog(true);
       setSelectedImage(null);
@@ -86,7 +79,7 @@ export default function CreateDesign() {
     setLoading(false);
   };
 
-  // Image Uploaded to Firebase Storage
+  // Image Upload to Firebase Storage
   const saveImageInFirebase = async (file: File) => {
     try {
       const storageRef = ref(storage, `design_images/${file.name}`);
@@ -218,17 +211,13 @@ export default function CreateDesign() {
         </div>
         <HowItWorks />
 
-        <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-          <DialogContent style={{ maxWidth: "500px", padding: "20px" }}>
-            <DialogHeader>
-              <ReactBeforeSliderComponent
-                firstImage={FIRST_IMAGE}
-                secondImage={SECOND_IMAGE}
-                className="mt-4"
-              />
-            </DialogHeader>
-          </DialogContent>
-        </Dialog>
+        <DialogComponent
+          open={openDialog}
+          onOpenChange={setOpenDialog}
+          firstImage={FIRST_IMAGE}
+          secondImage={SECOND_IMAGE}
+        />
+
       </div>
     </div>
   );
