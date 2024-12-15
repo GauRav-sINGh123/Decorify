@@ -35,7 +35,6 @@ export default function Projects() {
       if (!isLoaded || !user || projects.length > 0) return;
 
       try {
-        console.log("Api Called");
         const projectsRef = collection(db, "users", user?.id, "projects");
         const querySnapshot = await getDocs(projectsRef);
 
