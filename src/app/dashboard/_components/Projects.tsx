@@ -29,7 +29,7 @@ export default function Projects() {
   const { projects, setProjects } = useUserStore();
   const [loading, setLoading] = useState<boolean>(true);
   const [openDialog, setOpenDialog] = useState<boolean>(false);
- 
+  const [selectedImages, setSelectedImages] = useState<{ oldImage: string; newImage: string } | null>(null);
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -80,7 +80,10 @@ export default function Projects() {
   };
 
   const handleImageClick = (project: Project) => {
-    
+    setSelectedImages({
+      oldImage: project.oldImage,
+      newImage: project.newImage,
+    });
     setOpenDialog(true);
   };
 
@@ -93,12 +96,12 @@ export default function Projects() {
       <div className="max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-light">Projects</h2>
-         < Link href={"/dashboard/create_design"}>
-         <Button variant="outline" size="default">
-            <Plus className="w-4 h-4 mr-2" />
-            New Project
-          </Button>
-         </Link>
+          <Link href={"/dashboard/create_design"}>
+            <Button variant="outline" size="default">
+              <Plus className="w-4 h-4 mr-2" />
+              New Project
+            </Button>
+          </Link>
         </div>
 
         {projects.length === 0 ? (
@@ -143,16 +146,19 @@ export default function Projects() {
                   >
                     Delete
                   </Button>
-                  <DialogComponent
-                    open={openDialog}
-                    onOpenChange={setOpenDialog}
-                    firstImage={{ imageUrl: project.oldImage }}   
-                    secondImage={{ imageUrl: project.newImage }} 
-                  />
                 </div>
               </Card>
             ))}
           </div>
+        )}
+
+        {selectedImages && (
+          <DialogComponent
+            open={openDialog}
+            onOpenChange={setOpenDialog}
+            firstImage={{ imageUrl: selectedImages.oldImage }}
+            secondImage={{ imageUrl: selectedImages.newImage }}
+          />
         )}
       </div>
     </div>
