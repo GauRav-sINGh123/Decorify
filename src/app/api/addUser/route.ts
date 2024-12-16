@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
         name: `${firstName} ${lastName}`,
         email: emailAddress,
         image: profileImageUrl,
-        credits: 5, // Default credits
+        credits: 3,  
         createdAt: new Date().toISOString(),
       };
 
