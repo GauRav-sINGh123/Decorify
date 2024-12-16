@@ -33,10 +33,10 @@ export async function POST(req: NextRequest) {
         createdAt: new Date().toISOString(),
       };
 
-      
+      // Saves the new user to Firestore
       await setDoc(userRef, newUser);
 
-      // Returns the full user data to the client
+      
       return NextResponse.json({ user: newUser }, { status: 201 });
     }
 
