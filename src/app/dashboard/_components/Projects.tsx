@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
-import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
+import { collection, deleteDoc, doc, onSnapshot } from "firebase/firestore";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -13,8 +13,7 @@ import Image from "next/image";
 import { useUserStore } from "@/store/useUserStore";
 import DialogComponent from "./DialogComponent";
 import Link from "next/link";
-import {Project} from "@/types/types";
-
+import { Project } from "@/types/types";
 
 export default function Projects() {
   const { user, isLoaded } = useUser();
@@ -24,44 +23,35 @@ export default function Projects() {
   const [selectedImages, setSelectedImages] = useState<{ oldImage: string; newImage: string } | null>(null);
 
   useEffect(() => {
-    const fetchProjects = async () => {
-      if (!isLoaded || !user || projects.length > 0) return;
+    if (!isLoaded || !user) return;
 
-      try {
-        const projectsRef = collection(db, "users", user?.id, "projects");
-        const querySnapshot = await getDocs(projectsRef);
+    const projectsRef = collection(db, "users", user.id, "projects");
 
-        const projectsData: Project[] = querySnapshot.docs.map((doc) => ({
+    
+    const unsubscribe = onSnapshot(
+      projectsRef,
+      (snapshot) => {
+        const projectsData: Project[] = snapshot.docs.map((doc) => ({
           id: doc.id,
           ...doc.data(),
         })) as Project[];
-
         setProjects(projectsData);
-      } catch (err) {
-        toast.error(
-          "Error fetching projects: " +
-            (err instanceof Error ? err.message : "Unknown")
-        );
-      } finally {
+        setLoading(false);  
+      },
+      (error) => {
+        toast.error("Error fetching projects: " + error.message);
         setLoading(false);
       }
-    };
+    );
 
-    fetchProjects();
-    setLoading(false);
-  }, [isLoaded, user, setProjects, projects.length]);
+    return () => unsubscribe();  
+  }, [isLoaded, user, setProjects]);
 
   const handleDelete = async (projectId: string) => {
     if (!user) return;
 
     try {
       await deleteDoc(doc(db, "users", user.id, "projects", projectId));
-
-      const updatedProjects = projects.filter(
-        (project) => project.id !== projectId
-      );
-      setProjects(updatedProjects);
-
       toast.success("Project deleted successfully");
     } catch (err) {
       toast.error(

@@ -15,13 +15,15 @@ import { Textarea } from "@/components/ui/textarea";
 import { ImagePlus } from "lucide-react";
 import HowItWorks from "../_components/HowItWorks";
 import { toast } from "sonner";
-import { db, storage } from "@/app/config/firebase";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { db} from "@/app/config/firebase";
 import axios from "axios";
 import {styles} from "@/constants/Constants";
 import DialogComponent from "../_components/DialogComponent";
 import { useUserStore } from "@/store/useUserStore";
 import { addDoc, collection, doc, updateDoc } from "firebase/firestore";
+import {saveImageInFirebase, saveImageFromUrlToFirebase} from "@/lib/firebaseUtils";
+
+ 
 
 export default function CreateDesign() {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
@@ -41,11 +43,7 @@ export default function CreateDesign() {
   };
 
   const handleStyleSelection = (style: string) => {
-    if (selectedStyle === style) {
-      setSelectedStyle(null);
-    } else {
-      setSelectedStyle(style);
-    }
+    setSelectedStyle((prev) => (prev === style ? null : style));
   };
 
   const generateDesign = async () => {
@@ -58,56 +56,51 @@ export default function CreateDesign() {
     }
 
     setLoading(true);
+
     try {
-      const imageUrl = await saveImageInFirebase(selectedImage);
+      
+      const oldImageUrl = await saveImageInFirebase(selectedImage);
 
-      const { data } = await axios.post("/api/redesign", {
-        imageUrl,
-        roomType,
-        selectedStyle,
-        requirements,
-      },{
-        timeout: 120000  
-      });
+      const { data } = await axios.post(
+        "/api/redesign",
+        { imageUrl: oldImageUrl, roomType, selectedStyle, requirements },
+        { timeout: 120000 }
+      );
 
-      const newImage = data.newImage;
+        
+      const generatedImageUrl = data.newImage;
+      const savedNewImageUrl = await saveImageFromUrlToFirebase(generatedImageUrl);
 
+      
       if (user) {
-        setUser({ ...user, credits: user.credits - 1 });
+        const updatedCredits = user.credits - 1;
+        setUser({ ...user, credits: updatedCredits });
         const userDocRef = doc(db, "users", user.id);
-        await updateDoc(userDocRef, { credits: user.credits - 1 });
+        await updateDoc(userDocRef, { credits: updatedCredits });
       }
 
-      const projectsCollection = collection(db, "users/" + user?.id + "/projects");
+       
+      const projectsCollection = collection(db, `users/${user?.id}/projects`);
       const newProject = {
-        oldImage: imageUrl,
+        oldImage: oldImageUrl,
         roomType,
         selectedStyle,
         requirements: requirements || "",
-        newImage,
+        newImage: savedNewImageUrl,
         createdAt: new Date().toISOString(),
       };
       await addDoc(projectsCollection, newProject);
 
-      setResponse({ oldImage: imageUrl, newImage });
+      setResponse({ oldImage: oldImageUrl, newImage: savedNewImageUrl });
       setOpenDialog(true);
 
       toast.success("Design generated successfully!");
     } catch (error) {
+      console.error("Error generating design:", error);
       toast.error("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
       resetFields();
-    }
-  };
-
-  const saveImageInFirebase = async (file: File) => {
-    try {
-      const storageRef = ref(storage, `design_images/${file.name}`);
-      const snapshot = await uploadBytes(storageRef, file);
-      return await getDownloadURL(snapshot.ref);
-    } catch (error) {
-      toast.error("Error uploading image. Please try again.");
     }
   };
 
