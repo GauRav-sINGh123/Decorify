@@ -29,11 +29,11 @@ export async function POST(req: NextRequest) {
         name: `${firstName} ${lastName}`,
         email: emailAddress,
         image: profileImageUrl,
-        credits: 3,  
+        credits: 4,  
         createdAt: new Date().toISOString(),
       };
 
-      // Saves the new user to Firestore
+      
       await setDoc(userRef, newUser);
 
       // Returns the full user data to the client
